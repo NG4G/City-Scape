@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 
 public class BroterMovementScript : MonoBehaviour
 {
-    public float speed;
+    public float moveSpeed;
     public float jumpHeight;
 
     public Rigidbody2D rb2d;
@@ -19,16 +19,16 @@ public class BroterMovementScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        rb2d.linearVelocityX = _movement;
     }
 
     public void Move(InputAction.CallbackContext ctx)
     {
-        _movement = ctx.ReadValue<Vector2>().x;
+        _movement = ctx.ReadValue<Vector2>().x * moveSpeed;
     }
 
     public void Jump(InputAction.CallbackContext ctx)
     {
-
+        rb2d.linearVelocityY = jumpHeight;
     }
 }
