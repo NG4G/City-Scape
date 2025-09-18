@@ -6,18 +6,18 @@ public class BroterMovementScript : MonoBehaviour
     public float moveSpeed;
     public float jumpHeight;
 
-    public Rigidbody2D rb2d;
+    private Rigidbody2D rb2d;
 
     private float _movement;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    void Awake()
     {
-        
+        rb2d = GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
-    void Update()
+    void Update() 
     {
         rb2d.linearVelocityX = _movement;
     }
@@ -29,6 +29,9 @@ public class BroterMovementScript : MonoBehaviour
 
     public void Jump(InputAction.CallbackContext ctx)
     {
-        rb2d.linearVelocityY = jumpHeight;
+        if (ctx.ReadValue<float>()== 1)
+            {
+                rb2d.linearVelocityY = jumpHeight;
+            }
     }
 }
