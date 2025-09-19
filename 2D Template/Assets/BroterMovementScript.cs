@@ -22,6 +22,15 @@ public class BroterMovementScript : MonoBehaviour
     void Update() 
     {
         rb2d.linearVelocityX = _movement;
+
+        if (_movement > 0)
+        {
+            gameObject.transform.localScale = new Vector3(1, 1, 1);
+        }
+        if (_movement < 0)
+        {
+            gameObject.transform.localScale = new Vector3(-1, 1, 1);
+        }
     }
 
     public void Move(InputAction.CallbackContext ctx)
