@@ -12,6 +12,8 @@ public class BroterMovementScript : MonoBehaviour
 
     bool grounded;
 
+   //SerializeField] private Animator _animator;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
@@ -36,6 +38,14 @@ public class BroterMovementScript : MonoBehaviour
     public void Move(InputAction.CallbackContext ctx)
     {
         _movement = ctx.ReadValue<Vector2>().x * moveSpeed;
+       //f (_movement != 0)
+       //
+        //  _animator.SetBool("isRunning", true);
+       //
+       //else
+      //{
+      //    _animator.SetBool("isRunning", false);
+      //}
     }
 
     public void Jump(InputAction.CallbackContext ctx) 
