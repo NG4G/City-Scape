@@ -7,19 +7,17 @@ public class BroterMovementScript : MonoBehaviour
     public float jumpHeight;
 
     private Rigidbody2D rb2d;
-    Animator animator;
 
     private float _movement;
 
-    bool grounded = false;
+    bool grounded;
 
    //SerializeField] private Animator _animator;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    void Awake()
     {
         rb2d = GetComponent<Rigidbody2D>();
-        animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -55,13 +53,7 @@ public class BroterMovementScript : MonoBehaviour
         if (ctx.ReadValue<float>()== 1 && grounded) 
             {
                 rb2d.linearVelocityY = jumpHeight;
-                grounded = false;
-                animator.SetBool("isJumping", !grounded);
             }
-    }
-    private void FixedUpdate()
-    {
-        
     }
 
     private void OnCollisionEnter2D(Collision2D other)
