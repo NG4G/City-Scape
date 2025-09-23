@@ -269,6 +269,7 @@ GameObject:
   - component: {fileID: 425609896}
   - component: {fileID: 425609897}
   - component: {fileID: 425609898}
+  - component: {fileID: 425609899}
   m_Layer: 0
   m_Name: broter_0
   m_TagString: Player
@@ -434,7 +435,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 6
   jumpHeight: 15
-  _animator: {fileID: 425609898}
 --- !u!114 &425609896
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -601,6 +601,43 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!70 &425609899
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 425609889}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0.0125676105, y: -1.2566379}
+  m_Size: {x: 1.4425727, y: 0.33672813}
+  m_Direction: 1
 --- !u!1 &657224696
 GameObject:
   m_ObjectHideFlags: 0
