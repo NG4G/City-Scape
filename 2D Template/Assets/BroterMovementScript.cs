@@ -101,10 +101,10 @@ public class BroterMovementScript : MonoBehaviour
     {
         if(isFacingRight && horizontalInput < 0f || !isFacingRight && horizontalInput > 0f)
         {
-            Vector3 localScale = transform.localScale;
+            Vector3 ls = transform.localScale;
             isFacingRight = !isFacingRight;
-            localScale.x *= -1f;
-            transform.localScale = localScale;
+            ls.x *= -1f;
+            transform.localScale = ls;
         }
     }
     
