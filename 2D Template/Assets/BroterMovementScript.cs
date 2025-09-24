@@ -1,86 +1,132 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 
 public class BroterMovementScript : MonoBehaviour
 {
-    public float moveSpeed;
-    public float jumpHeight;
+    float horizontalInput;
+    float moveSpeed = 7f;
+    bool isFacingRight;
+    float jumpPower = 15f;
+    bool isGrounded = false;
 
-    private Rigidbody2D rb2d;
+    Rigidbody2D rb;
     Animator animator;
 
-    private float _movement;
+    public GameObject attackPoint;
+    public float radius;
+    public LayerMask enemies;
+    public float damage;
 
-    bool grounded = false;
+    private bool canDash = true;
+    private bool isDashing;
+    private float dashingPower = 24f;
+    private float dashingTime = 0.2f;
+    private float dashingCooldown = 1f;
 
-   //SerializeField] private Animator _animator;
+    [SerializeField] private TrailRenderer tr;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        rb2d = GetComponent<Rigidbody2D>();
+        rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
     void Update() 
     {
-        rb2d.linearVelocityX = _movement;
-
-        if (_movement > 0)
+        if (isDashing)
         {
-            gameObject.transform.localScale = new Vector3(1, 1, 1);
+            return;
         }
-        if (_movement < 0)
+
+        horizontalInput = Input.GetAxis("Horizontal");
+
+        FlipSprite();
+
+        if(Input.GetButtonDown("Jump") && isGrounded)
         {
-            gameObject.transform.localScale = new Vector3(-1, 1, 1);
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpPower);
+            isGrounded = false;
+            animator.SetBool("isJumping", !isGrounded);
+        }
+
+        if(Input.GetMouseButtonDown(0))
+        {
+            animator.SetBool("isAttacking", true);
+        }
+        if(Input.GetKeyDown(KeyCode.LeftShift) && canDash)
+        {
+            StartCoroutine(Dash());
         }
     }
 
-    public void Move(InputAction.CallbackContext ctx)
+    public void attack()
     {
-        _movement = ctx.ReadValue<Vector2>().x * moveSpeed;
-       //f (_movement != 0)
-       //
-        //  _animator.SetBool("isRunning", true);
-       //
-       //else
-      //{
-      //    _animator.SetBool("isRunning", false);
-      //}
+        Collider2D[] enemy = Physics2D.OverlapCircleAll(attackPoint.transform.position, radius, enemies);
+
+        foreach (Collider2D enemyGameObject in enemy)
+        {
+            Debug.Log("Hit enemy");
+            enemyGameObject.GetComponent<EnemyHealth>().health -= damage;
+        }
     }
 
-    public void Jump(InputAction.CallbackContext ctx) 
+    void endAttack()
     {
-        if (ctx.ReadValue<float>()== 1 && grounded) 
-            {
-                rb2d.linearVelocityY = jumpHeight;
-                grounded = false;
-                animator.SetBool("isJumping", !grounded);
-            }
+        animator.SetBool("isAttacking", false);
     }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(attackPoint.transform.position, radius);
+    }
+
     private void FixedUpdate()
     {
-        
+        if (isDashing)
+        {
+            return;
+        }
+        rb.linearVelocity = new Vector2(horizontalInput * moveSpeed, rb.linearVelocity.y);
+        animator.SetFloat("xVelocity", Math.Abs(rb.linearVelocity.x));
+        animator.SetFloat("yVelocity", rb.linearVelocity.y);
     }
 
-    private void OnCollisionEnter2D(Collision2D other)
+    void FlipSprite()
     {
-        if(other.gameObject.CompareTag("Ground"))
+        if(isFacingRight && horizontalInput < 0f || !isFacingRight && horizontalInput > 0f)
         {
-            Vector3 normal = other.GetContact(0).normal;
-            if (normal == Vector3.up)
-            {
-                grounded = true;
-            }
+            isFacingRight = !isFacingRight;
+            Vector3 ls = transform.localScale;
+            ls.x *= -1f;
+            transform.localScale = ls;
         }
     }
+    
 
-    private void OnCollisionExit2D(Collision2D other)
+    void OnTriggerEnter2D(Collider2D collsion)
     {
-        if (other.gameObject.CompareTag("Ground"))
-        {
-            grounded = false;
-        }
+        isGrounded = true;
+        animator.SetBool("isJumping", !isGrounded);
+    }
+
+    private IEnumerator Dash()
+    {
+        canDash = false;
+        isDashing = true;
+        float originalGravity = rb.gravityScale;
+        rb.gravityScale = 0f;
+        rb.linearVelocity = new Vector2(transform.localScale.x * dashingPower, 0f);
+        tr.emitting = true;
+        yield return new WaitForSeconds(dashingTime);
+        tr.emitting = false;
+        rb.gravityScale = originalGravity;
+        isDashing = false;
+        yield return new WaitForSeconds(dashingCooldown);
+        canDash = true;
     }
 }
