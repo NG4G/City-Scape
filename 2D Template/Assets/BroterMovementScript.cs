@@ -7,9 +7,9 @@ using System.Collections.Generic;
 public class BroterMovementScript : MonoBehaviour
 {
     float horizontalInput;
-    float moveSpeed = 5f;
+    public float moveSpeed = -5f;
     bool isFacingRight;
-    float jumpPower = 15f;
+    public float jumpPower = 15f;
     bool isGrounded = false;
 
     Rigidbody2D rb;
@@ -22,8 +22,8 @@ public class BroterMovementScript : MonoBehaviour
 
     private bool canDash = true;
     private bool isDashing;
-    private float dashingPower = 100f;
-    private float dashingTime = 0.5f;
+    public float dashingPower = 24f;
+    private float dashingTime = 0.35f;
     private float dashingCooldown = 1f;
 
     [SerializeField] private TrailRenderer tr;
@@ -70,7 +70,6 @@ public class BroterMovementScript : MonoBehaviour
 
         foreach (Collider2D enemyGameObject in enemy)
         {
-            Debug.Log("Hit enemy");
             enemyGameObject.GetComponent<EnemyHealth>().health -= damage;
         }
     }
@@ -87,14 +86,16 @@ public class BroterMovementScript : MonoBehaviour
 
     private void FixedUpdate()
     {
-        rb.linearVelocity = new Vector2(horizontalInput * moveSpeed, rb.linearVelocity.y);
-        animator.SetFloat("xVelocity", Math.Abs(rb.linearVelocity.x));
-        animator.SetFloat("yVelocity", rb.linearVelocity.y);
-
         if (isDashing)
         {
             return;
         }
+
+        rb.linearVelocity = new Vector2(horizontalInput * moveSpeed, rb.linearVelocity.y);
+
+        animator.SetFloat("xVelocity", Math.Abs(rb.linearVelocity.x));
+        animator.SetFloat("yVelocity", rb.linearVelocity.y);
+
     }
 
     void FlipSprite()
