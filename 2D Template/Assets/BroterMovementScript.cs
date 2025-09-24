@@ -7,7 +7,7 @@ using System.Collections.Generic;
 public class BroterMovementScript : MonoBehaviour
 {
     float horizontalInput;
-    float moveSpeed = 7f;
+    float moveSpeed = 5f;
     bool isFacingRight;
     float jumpPower = 15f;
     bool isGrounded = false;
@@ -22,8 +22,8 @@ public class BroterMovementScript : MonoBehaviour
 
     private bool canDash = true;
     private bool isDashing;
-    private float dashingPower = 24f;
-    private float dashingTime = 0.2f;
+    private float dashingPower = 100f;
+    private float dashingTime = 0.5f;
     private float dashingCooldown = 1f;
 
     [SerializeField] private TrailRenderer tr;
@@ -87,23 +87,24 @@ public class BroterMovementScript : MonoBehaviour
 
     private void FixedUpdate()
     {
+        rb.linearVelocity = new Vector2(horizontalInput * moveSpeed, rb.linearVelocity.y);
+        animator.SetFloat("xVelocity", Math.Abs(rb.linearVelocity.x));
+        animator.SetFloat("yVelocity", rb.linearVelocity.y);
+
         if (isDashing)
         {
             return;
         }
-        rb.linearVelocity = new Vector2(horizontalInput * moveSpeed, rb.linearVelocity.y);
-        animator.SetFloat("xVelocity", Math.Abs(rb.linearVelocity.x));
-        animator.SetFloat("yVelocity", rb.linearVelocity.y);
     }
 
     void FlipSprite()
     {
         if(isFacingRight && horizontalInput < 0f || !isFacingRight && horizontalInput > 0f)
         {
+            Vector3 localScale = transform.localScale;
             isFacingRight = !isFacingRight;
-            Vector3 ls = transform.localScale;
-            ls.x *= -1f;
-            transform.localScale = ls;
+            localScale.x *= -1f;
+            transform.localScale = localScale;
         }
     }
     
